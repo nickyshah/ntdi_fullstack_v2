@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { switchTasks } from '../Helper/axiosHelper'
 
 export const Tables = ({taskList, setResp, fetchTask}) => {
+
+    const [idsToDelete, setIdsToDelete] = useState([])
 
     const entryArg = taskList.filter(item => item.type === 'entry') 
     const badArg = taskList.filter(item => item.type === 'bad') 
@@ -12,18 +14,69 @@ export const Tables = ({taskList, setResp, fetchTask}) => {
         data.status === 'success' && fetchTask()
     }
 
+    const handleOnSelectAll = (e) => {
+        // console.log(e)
+        const {checked, value} = e.target
+        // console.log(checked, value)
+
+        const filteredArg = [];
+        taskList.map((item) => {
+            if (item.type === value){
+                filteredArg.push(item._id)
+            }
+        })
+
+        if(checked) {
+            // add ids to delete
+            setIdsToDelete([...idsToDelete, ...filteredArg])
+        } else{
+            // remove these ids 
+            const afterRemovingIds = idsToDelete.filter((id) => 
+                !filteredArg.includes(id)
+
+            )
+            setIdsToDelete(afterRemovingIds)
+        }
+}
+
+const handleOnItemSelect = e => {
+    const {checked, value} = e.target
+    console.log(checked, value)
+    if(checked){
+        // add the id to delete
+        setIdsToDelete([...idsToDelete, value])
+    }else{
+        //remove id 
+        
+        setIdsToDelete(idsToDelete.filter((item) => item !== value))
+    }
+}
+// console.log(idsToDelete)
+
     return (
         <div className='row mt-4'>
             <div className="col-md ">
                 <h3 className='text-center'>Entry List</h3>
+                <div><input type="checkbox" id="" className='from-check-input' 
+                onChange={handleOnSelectAll}
+                value="entry"
+                />{" "}
+                            <label htmlFor="" >Select All Entry List </label></div>
                 <table class="table table-striped table-hover border">
+                
                     <tbody>
+                        
                         {
                           entryArg.map(({_id, task, hr}) =>  
                         
                         <tr>
                             <td>
-                            <input type="checkbox" id={_id} className='from-check-input'/>{" "}
+                            <input type="checkbox" id={_id} 
+                            value={_id}
+                            className='from-check-input'
+                            checked={idsToDelete.includes(_id)}
+                            onChange={handleOnItemSelect}
+                            />{" "}
                             <label htmlFor={_id}> {task} </label>
                             </td>
                             <td >{hr} Hr</td>
@@ -40,6 +93,10 @@ export const Tables = ({taskList, setResp, fetchTask}) => {
             </div>
             <div className="col-md ">
             <h3 className='text-center'>Bad List</h3>
+            <div><input type="checkbox" id="" className='from-check-input'
+            onChange={handleOnSelectAll} 
+            value="bad"/>{" "}
+                            <label htmlFor="">Select All Bad List  </label></div>
                 <table class="table table-striped table-hover border">
                     <tbody>
                     {
@@ -47,7 +104,11 @@ export const Tables = ({taskList, setResp, fetchTask}) => {
                         
                         <tr>
                             <td>
-                            <input type="checkbox" id={_id} className='from-check-input'/>{" "}
+                            <input type="checkbox" id={_id} className='from-check-input'
+                            checked={idsToDelete.includes(_id)}
+                            onChange={handleOnItemSelect}
+                            value={_id}
+                            />{" "}
                             <label htmlFor={_id}> {task} </label>
                             </td>
                             <td >{hr} Hr</td>
