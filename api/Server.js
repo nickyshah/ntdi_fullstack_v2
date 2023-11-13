@@ -7,7 +7,7 @@ import cors from 'cors'
 import morgan from 'morgan'
 
 const app = express()
-const PORT =  8000
+const PORT = process.env.PORT || 8000; 
 
 // DB Connection 
 
