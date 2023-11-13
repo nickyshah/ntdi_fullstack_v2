@@ -22,6 +22,13 @@ useEffect(()=>{
       // console.log(data.taskList)
     }
   }
+
+  const ttlhr = taskList.reduce((a, i) => a + +i.hr, 0)
+  const msg = {
+      status: "success",
+      message: `You Could have Saved ${ttlhr} Hours.`
+  }
+
   return (
    <div className="wrapper">
     <div className="container">
@@ -33,7 +40,7 @@ useEffect(()=>{
       <Message resp={resp} />
       {showSpinner && <Spinner />}
       {/* form here  */}
-      <Form setResp={setResp} setShowSpinner={setShowSpinner}/>
+      <Form ttlhr={ttlhr} fetchTask={fetchTask} setResp={setResp} setShowSpinner={setShowSpinner}/>
       <hr />
       {/* table Here  */}
 

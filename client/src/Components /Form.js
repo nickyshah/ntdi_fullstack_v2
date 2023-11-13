@@ -5,8 +5,8 @@ const initialState = {
     task: "",
     hr: ""
 }
-
-export const Form = ({setResp, setShowSpinner}) => {
+const ttlhrsWk = 24*7
+export const Form = ({setResp, setShowSpinner, fetchTask, ttlHr}) => {
 
     const [form, setForm] = useState(initialState)
 
@@ -21,14 +21,22 @@ export const Form = ({setResp, setShowSpinner}) => {
     const handleOnSubmit = async (e) => {
         e.preventDefault()
         console.log(form)
+        
+        // to check if you have enough hours to add the task 
+        if (ttlHr + +form.hr > ttlhrsWk){
+            return alert("Not Enough Time to Left to be Added....")
+        }
         setShowSpinner(true)
-
 
         //call the api 
         const data = await postTask(form)
         setResp(data)
         setShowSpinner(false)
-        data.status === "success" && setForm(initialState)
+        if (data.status === "success")
+         {
+            setForm(initialState)
+            fetchTask()
+        }
     }
     
     return (
@@ -48,7 +56,7 @@ export const Form = ({setResp, setShowSpinner}) => {
                 <div className="col-md-3">
                     <input type="number" className='form-control'
                     placeholder='i.e  44'
-                    required
+                    required min={1}
                     name='hr'
                     value={form.hr}
                     onChange={handleOnChange}

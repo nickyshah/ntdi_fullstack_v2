@@ -8,6 +8,10 @@ export const postTask = async (obj) => {
         return data;
     } catch (error) {
         console.log(error)
+        return {
+            status: "error",
+            message: error.message
+        }
     }
 }
 export const getTasks = async () => {
@@ -16,13 +20,35 @@ export const getTasks = async () => {
         return data;
     } catch (error) {
         console.log(error)
+        return {
+            status: "error",
+            message: error.message
+        }
     }
-}
+    }
+
 export const switchTasks = async (obj) => {
     try {
         const {data} = await  axios.patch(apiEP, obj)
         return data;
     } catch (error) {
         console.log(error)
+        return {
+            status: "error",
+            message: error.message
+        }
     }
-}
+    }
+
+export const deleteTasks = async (ids) => {
+    try {
+        const {data} = await  axios.delete(apiEP, {data: ids})
+        return data;
+    } catch (error) {
+        console.log(error)
+        return {
+            status: "error",
+            message: error.message
+        }
+    }
+    }
