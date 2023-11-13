@@ -13,3 +13,10 @@ export const getTasks = () => {
 export const updateTasks = (_id, type) => {
     return taskSchema.findByIdAndUpdate(_id, {type})
 }
+export const deleteTasks = (ids) => {
+    return taskSchema.deleteMany({
+        _id: {
+            $in: ids,
+        }
+    })
+}

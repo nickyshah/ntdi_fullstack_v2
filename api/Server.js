@@ -1,3 +1,5 @@
+import dotenv from 'dotenv'
+dotenv.config()
 import express from 'express'
 import taskrouter from './router.js'
 import { connectDB } from './src/config/dbConfig.js'
@@ -11,6 +13,12 @@ const PORT =  8000
 
 connectDB()
 
+// setup static content serve 
+import path from 'path'
+const __dirname = path.resolve()
+app.use(express.static(__dirname + "/build"))
+
+
 app.use(express.json())
 app.use(cors())
 app.use(morgan("dev"))
@@ -22,6 +30,10 @@ app.use("/api/v1/task", taskrouter)
 //         message: "still to do"
 //     })
 // // })
+app.use("/", (req, res) => {
+    res.sendFile(__dirname + "index.html")
+})
+
 
 
 app.listen(PORT, (error)=>{
